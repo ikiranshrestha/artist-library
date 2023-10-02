@@ -47,30 +47,31 @@ abstract class BaseRepository {
         throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
     }
 
-    public function store(string $query, array $bindings): object
+    public function store(array $data): mixed
     {
         DB::beginTransaction();
 
         try {
-            DB::insert($query, $bindings);
+            // Construct the SQL INSERT statement
+            $sql = "INSERT INTO $this->tableName (";
+            $columns = implode(', ', array_keys($data));
+            $values = implode(', ', array_fill(0, count($data), '?'));
 
+            $sql .= "$columns) VALUES ($values)";
+
+            // Execute the raw SQL query with bindings
+            $store = DB::insert($sql, array_values($data));
+
+            // Commit the transaction
             DB::commit();
+
+            // Return the ID of the newly created record
+            return DB::getPdo()->lastInsertId();
         } catch (\Exception $e) {
+            // Rollback the transaction on exception
             DB::rollback();
             throw $e;
         }
-
-        // Assuming you have a way to determine the primary key ID
-        $lastInsertedId = DB::getPdo()->lastInsertId();
-
-        $selectQuery = "SELECT * FROM your_table_name WHERE id = ?";
-        $result = DB::select($selectQuery, [$lastInsertedId]);
-
-        if (!empty($result)) {
-            return (object) $result[0];
-        }
-
-        throw new \Exception("Failed to retrieve the inserted record.");
     }
 
     public function updateUsingRawQuery(array $data, int $id): object

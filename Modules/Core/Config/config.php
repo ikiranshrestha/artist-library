@@ -1,5 +1,8 @@
 <?php
 
 return [
-    'name' => 'Core'
+    'name' => 'Core',
+    'models' => [
+        'user' => Modules\Core\Entities\User::class,
+    ],
 ];

@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\AuthenticationService;
 
 class AuthenticationController extends Controller

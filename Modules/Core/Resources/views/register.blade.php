@@ -5,57 +5,52 @@
         <form method="POST" action="{{ route("core.register.user") }}">
             @csrf
             <div class="form-group">
-            <label for="exampleInputEmail1">First Name</label>
-            <input type="text" class="form-control" id=""  aria-describedby="emailHelp" placeholder="First Name">
+                <label for="first_name">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" aria-describedby="emailHelp" placeholder="First Name">
             </div>
             <div class="form-group">
-            <label for="exampleInputEmail1">Last Name</label>
-            <input type="text" class="form-control" id="" aria-describedby="emailHelp" placeholder="Last Name">
+                <label for="last_name">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" aria-describedby="emailHelp" placeholder="Last Name">
             </div>
             <div class="form-group">
-            <label for="exampleInputEmail1">Email Address</label>
-            <input type="email" class="form-control" id="" aria-describedby="emailHelp" placeholder="Email Address">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <label for="email">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Email Address">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
             <div class="form-group">
-            <label for="exampleInputEmail1">Phone</label>
-            <input type="phone" class="form-control" id="" aria-describedby="emailHelp" placeholder="Phone">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your phone number with anyone else.</small>
+                <label for="phone">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" aria-describedby="emailHelp" placeholder="Phone">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your phone number with anyone else.</small>
             </div>
             <div class="form-group">
-            <label for="exampleInputEmail1">Date of Birth</label>
-            <input type="date" class="form-control" id="" aria-describedby="emailHelp" placeholder="Phone">
+                <label for="dob">Date of Birth</label>
+                <input type="date" class="form-control" id="dob" name="dob" aria-describedby="emailHelp" placeholder="Date of Birth">
             </div>
             <div class="form-group">
-            <label for="exampleInputEmail1">Gender</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gender" id="female" value="f" checked>
-                <label class="form-check-label" for="female">
-                Female
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gender" id="male" value="m">
-                <label class="form-check-label" for="exampleRadios2">
-                Male
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="gender" id="others" value="o">
-                <label class="form-check-label" for="others">
-                Others
-                </label>
-            </div>
+                <label for="gender">Gender</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="f" checked>
+                    <label class="form-check-label" for="female">Female</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="m">
+                    <label class="form-check-label" for="male">Male</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" id="others" value="o">
+                    <label class="form-check-label" for="others">Others</label>
+                </div>
             </div>
             <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <label for="last_name">Address</label>
+                <input type="text" class="form-control" id="address" name="address" aria-describedby="emailHelp" placeholder="Address">
             </div>
-            <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+
+            <button type="submit" class="btn btn-primary" name="register_btn">Submit</button>
         </form>
     </div>
 @endsection

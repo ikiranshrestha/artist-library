@@ -2,17 +2,20 @@
 
 namespace Modules\Core\Services;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Modules\Core\Entities\User;
+use Modules\Core\Repositories\AuthenticationRepository;
 
 class AuthenticationService
 {
     protected User $user;
+    protected AuthenticationRepository $authRepository;
 
-    function __construct(User $user)
+    function __construct(User $user, AuthenticationRepository $authRepository)
     {
         $this->user = $user;
+        $this->authRepository = $authRepository;
     }
 
     public function register(Request $request): mixed
@@ -26,22 +29,25 @@ class AuthenticationService
             "dob" => "required|date",
             "gender" => "required|in:m,f,o"
         ]);
-        dd(123);
+
         if ($validator->fails()) {
             return response()->json(["errors" => $validator->errors()], 422);
         }
 
         // Create a new user
-        $this->user->first_name = $request->first_name;
-        $this->user->last_name = $request->last_name;
-        $this->user->email = $request->email;
-        $this->user->password = bcrypt($request->password);
-        $this->user->phone = $request->phone;
-        $this->user->dob = $request->dob;
-        $this->user->gender = $request->gender;
-        $this->user->save();
+        $userArray = [];
+        $userArray['first_name'] = $request->first_name;
+        $userArray['last_name'] = $request->last_name;
+        $userArray['email'] = $request->email;
+        $userArray['password'] = bcrypt($request->password);
+        $userArray['phone'] = $request->phone;
+        $userArray['dob'] = $request->dob;
+        $userArray['gender'] = $request->gender;
+        $userArray['address'] = $request->address;
 
         // Generate a token for the user
         $token = $this->user->createToken("MyApp")->accessToken;
+        $userArray['tokenable_id'] = $token;
+        $this->authRepository->store($userArray);
     }
 }
