@@ -61,12 +61,10 @@ abstract class BaseRepository {
 
             // Execute the raw SQL query with bindings
             $store = DB::insert($sql, array_values($data));
-
             // Commit the transaction
             DB::commit();
 
-            // Return the ID of the newly created record
-            return DB::getPdo()->lastInsertId();
+            return $store;
         } catch (\Exception $e) {
             // Rollback the transaction on exception
             DB::rollback();
@@ -79,7 +77,7 @@ abstract class BaseRepository {
         DB::beginTransaction();
 
         try {
-            $query = "UPDATE your_table_name SET ";
+            $query = "UPDATE $this->tableName SET ";
 
             $bindings = [];
 
@@ -100,7 +98,7 @@ abstract class BaseRepository {
         }
 
         // Assuming you have a way to determine the primary key ID
-        $result = DB::table('your_table_name')
+        $result = DB::table('$this->tableName')
             ->where('id', '=', $id)
             ->first();
 

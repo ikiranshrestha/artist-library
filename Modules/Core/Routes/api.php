@@ -15,7 +15,9 @@ use Modules\Core\Http\Controllers\AuthenticationController;
 |
 */
 
-Route::prefix("core")->group(function() {
+Route::prefix("user")->group(function() {
     Route::get("/register", [AuthenticationController::class, "registerPage"]);
-    Route::post("/", [AuthenticationController::class, "register"])->name("core.register.user");
+    Route::post("/register-user", [AuthenticationController::class, "register"])->name("core.register.user");
+
+    Route::post("/login", [AuthenticationController::class, "login"])->name("core.login.user");
 });
