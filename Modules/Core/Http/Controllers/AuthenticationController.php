@@ -27,10 +27,6 @@ class AuthenticationController extends Controller
         $this->authService = $authService;
     }
 
-    public function test(): void
-    {
-        dump("testing");
-    }
 
     /**
      * Function to register new user
@@ -51,37 +47,9 @@ class AuthenticationController extends Controller
      */
     public function register(Request $request): View|JsonResponse
     {
-        $this->authService->register($request);
-        // // Validation rules for registration
-        // $validator = Validator::make($request->all(), [
-        //     "first_name" => "required|string|max:255",
-        //     "last_name" => "required|string|max:255",
-        //     "email" => "required|string|email|unique:users",
-        //     "password" => "required|string|min:6",
-        //     "phone" => "required|string|between:10,10",
-        //     "dob" => "required|date",
-        //     "gender" => "required|in:m,f,o"
-        // ]);
+        $response = $this->authService->register($request);
 
-        // if ($validator->fails()) {
-        //     return response()->json(["errors" => $validator->errors()], 422);
-        // }
-
-        // // Create a new user
-        // $this->user->first_name = $request->first_name;
-        // $this->user->last_name = $request->last_name;
-        // $this->user->email = $request->email;
-        // $this->user->password = bcrypt($request->password);
-        // $this->user->phone = $request->phone;
-        // $this->user->dob = $request->dob;
-        // $this->user->gender = $request->gender;
-        // $this->user->save();
-
-        // // Generate a token for the user
-        // $token = $this->user->createToken("MyApp")->accessToken;
-
-        return view("core::register");
-        // return response()->json(["token" => $token], 201);
+        return $response;
     }
 
     /**

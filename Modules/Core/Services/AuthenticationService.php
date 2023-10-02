@@ -18,7 +18,7 @@ class AuthenticationService
         $this->authRepository = $authRepository;
     }
 
-    public function register(Request $request): mixed
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             "first_name" => "required|string|max:255",
@@ -45,9 +45,12 @@ class AuthenticationService
         $userArray['gender'] = $request->gender;
         $userArray['address'] = $request->address;
 
-        // Generate a token for the user
-        $token = $this->user->createToken("MyApp")->accessToken;
-        $userArray['tokenable_id'] = $token;
-        $this->authRepository->store($userArray);
+        $store = $this->authRepository->store($userArray);
+
+        if($store) {
+            return response()->json(['message' => 'User Registered successfully'], 201);
+        } else {
+            return response()->json(['message' => 'Something Went Wrong'], 500);
+        }
     }
 }
