@@ -2,7 +2,9 @@
 
 namespace Modules\Core\Services;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Modules\Core\Entities\User;
 use Modules\Core\Repositories\AuthenticationRepository;
@@ -18,7 +20,7 @@ class AuthenticationService
         $this->authRepository = $authRepository;
     }
 
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             "first_name" => "required|string|max:255",
@@ -52,5 +54,38 @@ class AuthenticationService
         } else {
             return response()->json(['message' => 'Something Went Wrong'], 500);
         }
+    }
+
+    public function login(Request $request): JsonResponse
+    {
+        $credentials = $request->only('email', 'password');
+
+        $validator = Validator::make($request->all(), [
+            "email" => "required|string|email|exists:users",
+            "password" => "required|string|min:6",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(["errors" => $validator->errors()], 422);
+        }
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $token = $user->createToken('app-token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+        }
+
+        return response()->json(['message' => 'Invalid credentials'], 401);
+    }
+
+    public function logout(User $user): JsonResponse
+    {
+        $user->currentAccessToken()->delete();
+
+        return response()->json(["message" => "Successfully logged out"], 200);
     }
 }

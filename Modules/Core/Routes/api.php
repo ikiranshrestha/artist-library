@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Modules\Core\Http\Controllers\AuthenticationController;
 use Modules\Core\Http\Middleware\AuthenticateCustom;
@@ -16,7 +17,8 @@ use Modules\Core\Http\Middleware\AuthenticateCustom;
 |
 */
 
-Route::middleware('auth.custom')->prefix("user")->group(function() {
+Route::middleware(['auth:sanctum', 'auth.custom'])->prefix("user")->group(function() {
+    Route::post("/logout", [AuthenticationController::class, "logout"])->name("logout");
 });
 
 Route::prefix("user")->group(function() {

@@ -45,7 +45,7 @@ class AuthenticationController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request): View|JsonResponse
+    public function register(Request $request): JsonResponse
     {
         $response = $this->authService->register($request);
 
@@ -60,39 +60,21 @@ class AuthenticationController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        $credentials = $request->only('email', 'password');
+        $response = $this->authService->login($request);
 
-        $validator = Validator::make($request->all(), [
-            "email" => "required|string|email|exists:users",
-            "password" => "required|string|min:6",
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(["errors" => $validator->errors()], 422);
-        }
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('app-token')->plainTextToken;
-
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]);
-        }
-
-        return response()->json(['message' => 'Invalid credentials'], 401);
+        return $response;
     }
 
     /**
      * Get the authenticated user.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return User
      */
-    public function user(): JsonResponse
+    public function user(): User
     {
         $user = Auth::user();
-        return response()->json(["user" => $user], 200);
+
+        return $user;
     }
 
     /**
@@ -102,10 +84,10 @@ class AuthenticationController extends Controller
      */
     public function logout(): JsonResponse
     {
-        $user = Auth::user();
-        $this->user->token()->revoke();
+        $user = $this->user();
+        $response = $this->authService->logout($user);
 
-        return response()->json(["message" => "Successfully logged out"], 200);
+        return $response;
     }
 }
 
