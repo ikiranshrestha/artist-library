@@ -29,7 +29,8 @@ class AuthenticationService
             "password" => "required|string|min:6",
             "phone" => "required|string|between:10,10",
             "dob" => "required|date",
-            "gender" => "required|in:m,f,o"
+            "gender" => "required|in:m,f,o",
+            "address" => "nullable|string",
         ]);
 
         if ($validator->fails()) {

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Modules\ArtistSongs\Http\Controllers\ArtistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/artistsongs', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum', 'auth.custom'])->group(function() {
+    Route::apiResource('artists', ArtistController::class);
 });

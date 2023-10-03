@@ -15,7 +15,12 @@ return new class extends Migration
     {
         Schema::create('artists', function (Blueprint $table) {
             $table->id();
-
+            $table->string('name');
+            $table->date('dob');
+            $table->enum('gender', ['m', 'f', 'o']);
+            $table->text('address');
+            $table->year('first_year_release');
+            $table->integer('no_of_albums_released');
             $table->timestamps();
         });
     }

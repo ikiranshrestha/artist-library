@@ -9,10 +9,12 @@ class Artist extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \Modules\ArtistSongs\Database\factories\ArtistFactory::new();
-    }
+    protected $fillable = [
+        "name",
+        "dob",
+        "gender",
+        "address",
+        "first_year_release",
+        "no_of_albums_released",
+    ];
 }

@@ -5,16 +5,25 @@ namespace Modules\ArtistSongs\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\ArtistSongs\Services\ArtistService;
 
 class ArtistController extends Controller
 {
+    protected ArtistService $artistService;
+
+    function __construct(ArtistService $artistService)
+    {
+        $this->artistService = $artistService;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('artistsongs::index');
+        $response = $this->artistService->fetchAll($request);
+
+        return $response;
     }
 
     /**
@@ -33,7 +42,9 @@ class ArtistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $response = $this->artistService->store($request);
+
+        return $response;
     }
 
     /**
@@ -41,9 +52,11 @@ class ArtistController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(int $id)
     {
-        return view('artistsongs::show');
+        $response = $this->artistService->fetch($id);
+
+        return $response;
     }
 
     /**
@@ -62,9 +75,11 @@ class ArtistController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $response = $this->artistService->update($request, $id);
+
+        return $response;
     }
 
     /**
@@ -74,6 +89,8 @@ class ArtistController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $response = $this->artistService->delete($id);
+
+        return $response;
     }
 }
