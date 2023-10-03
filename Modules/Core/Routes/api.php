@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Core\Http\Controllers\AuthenticationController;
+use Modules\Core\Http\Middleware\AuthenticateCustom;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,12 @@ use Modules\Core\Http\Controllers\AuthenticationController;
 |
 */
 
+Route::middleware('auth.custom')->prefix("user")->group(function() {
+});
+
 Route::prefix("user")->group(function() {
     Route::get("/register", [AuthenticationController::class, "registerPage"]);
     Route::post("/register-user", [AuthenticationController::class, "register"])->name("core.register.user");
 
-    Route::post("/login", [AuthenticationController::class, "login"])->name("core.login.user");
+    Route::post("/login", [AuthenticationController::class, "login"])->name("login");
 });

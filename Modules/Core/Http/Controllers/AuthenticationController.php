@@ -60,24 +60,28 @@ class AuthenticationController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        // Validation rules for login
+        $credentials = $request->only('email', 'password');
+
         $validator = Validator::make($request->all(), [
-            "email" => "required|string|email",
-            "password" => "required|string",
+            "email" => "required|string|email|exists:users",
+            "password" => "required|string|min:6",
         ]);
 
         if ($validator->fails()) {
             return response()->json(["errors" => $validator->errors()], 422);
         }
 
-        if (Auth::attempt(["email" => $request->email, "password" => $request->password])) {
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $this->user->createToken("MyApp")->accessToken;
+            $token = $user->createToken('app-token')->plainTextToken;
 
-            return response()->json(["token" => $token], 200);
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
         }
 
-        return response()->json(["error" => "Unauthorized"], 401);
+        return response()->json(['message' => 'Invalid credentials'], 401);
     }
 
     /**
