@@ -25,7 +25,6 @@ class SongService
 
     public function store(Request $request): JsonResponse
     {
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
             "artist_id" => "required|exists:artists,id",
             "title" => "required|string",
