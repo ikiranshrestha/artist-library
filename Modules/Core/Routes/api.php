@@ -19,9 +19,8 @@ use Modules\Core\Http\Middleware\AuthenticateCustom;
 
 Route::middleware(['auth:sanctum', 'auth.custom'])->prefix("user")->group(function() {
     Route::post("/logout", [AuthenticationController::class, "logout"])->name("logout");
-    Route::get("/test", function() {
-        dd("testing");
-    });
+    Route::post("/create", [AuthenticationController::class, "register"])->name("core.create.user");
+
 });
 
 Route::prefix("user")->group(function() {
