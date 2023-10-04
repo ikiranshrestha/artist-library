@@ -74,4 +74,18 @@ class ArtistController extends Controller
 
         return $response;
     }
+
+    public function exportArtistCSV(Request $request)
+    {
+        $response = $this->artistService->exportCSV($request);
+
+        return $response;
+    }
+
+    public function importArtistCSV(Request $request)
+    {
+        $response = $this->artistService->importCSV($request);
+
+        return $response;
+    }
 }
