@@ -5,25 +5,25 @@ namespace Modules\ArtistSongs\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\ArtistSongs\Services\SongService;
 
 class SongController extends Controller
 {
+    protected SongService $songService;
+
+    function __construct(SongService $songService)
+    {
+        $this->songService = $songService;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('artistsongs::index');
-    }
+        $response = $this->songService->fetchAll($request);
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('artistsongs::create');
+        return $response;
     }
 
     /**
@@ -33,7 +33,9 @@ class SongController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $response = $this->songService->store($request);
+
+        return $response;
     }
 
     /**
@@ -41,19 +43,18 @@ class SongController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(int $id)
     {
-        return view('artistsongs::show');
+        $response = $this->songService->fetch($id);
+
+        return $response;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
+    public function fetchByArtist(int $id)
     {
-        return view('artistsongs::edit');
+        $response = $this->songService->fetchByArtist($id);
+
+        return $response;
     }
 
     /**
@@ -62,9 +63,11 @@ class SongController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $response = $this->songService->update($request, $id);
+
+        return $response;
     }
 
     /**
@@ -74,6 +77,8 @@ class SongController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $response = $this->songService->delete($id);
+
+        return $response;
     }
 }

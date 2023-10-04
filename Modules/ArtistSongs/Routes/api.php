@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\ArtistSongs\Http\Controllers\ArtistController;
+use Modules\ArtistSongs\Http\Controllers\SongController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,6 @@ use Modules\ArtistSongs\Http\Controllers\ArtistController;
 
 Route::middleware(['auth:sanctum', 'auth.custom'])->group(function() {
     Route::apiResource('artists', ArtistController::class);
+    Route::apiResource('songs', SongController::class);
+    Route::get('songs/artist/{id}', [SongController::class, "fetchByArtist"]);
 });
