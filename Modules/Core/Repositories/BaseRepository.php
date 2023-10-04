@@ -18,25 +18,6 @@ abstract class BaseRepository {
         $this->pdo = new PDO("mysql:host=localhost;dbname=artist_library", "root", "");
     }
 
-    // public function fetchAll(object $request, array $with = []): array
-    // {
-    //     $query = "SELECT * FROM $this->tableName";
-
-    //     if (!empty($with)) {
-    //         // Assuming $with is an array of related tables or columns
-    //         $query .= " WITH " . implode(", ", $with);
-    //     }
-
-    //     $result = DB::select($query);
-
-    //     // Assuming $result is an array of stdClass objects
-    //     $fetched = array_map(function ($item) {
-    //         return (object) get_object_vars($item);
-    //     }, $result);
-
-    //     return $fetched;
-    // }
-
     public function fetchAll(Request $request, array $with = []): array
     {
         try {
@@ -77,10 +58,6 @@ abstract class BaseRepository {
 
             if (!empty($with)) {
                 foreach ($with as $relationTable) {
-                    // Assuming $with contains the related table names
-                    // Customize the JOIN conditions as needed based on your schema
-                    // For simplicity, we assume that the foreign key in the related table
-                    // is named 'user_id' and it's related to the 'id' column of the main table
                     $query .= ", {$relationTable}.* LEFT JOIN {$relationTable} ON {$this->tableName}.id = {$relationTable}.user_id";
                 }
             }
@@ -100,6 +77,42 @@ abstract class BaseRepository {
             }
 
             throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
+        } catch (PDOException $e) {
+            // Handle any exceptions, such as database connection errors
+            throw new \Exception("Database error: " . $e->getMessage());
+        }
+    }
+
+    public function fetchBy(
+        string $column,
+        int|string $columnValue,
+        array $with = []
+    ): array {
+        try {
+            $query = "SELECT {$this->tableName}.*";
+
+            if (!empty($with)) {
+                foreach ($with as $relationTable) {
+                    $query .= ", {$relationTable}.* LEFT JOIN {$relationTable} ON {$this->tableName}.id = {$relationTable}.user_id";
+                }
+            }
+
+            $query .= " FROM {$this->tableName} WHERE {$this->tableName}.{$column} = :columnValue";
+            $bindings = [':columnValue' => $columnValue];
+
+            // Prepare and execute the raw SQL query
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute($bindings);
+
+            // Fetch the results as associative arrays
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Assuming you want the results as an array of objects
+            $fetched = array_map(function ($item) {
+                return (object) $item;
+            }, $results);
+
+            return $fetched;
         } catch (PDOException $e) {
             // Handle any exceptions, such as database connection errors
             throw new \Exception("Database error: " . $e->getMessage());
