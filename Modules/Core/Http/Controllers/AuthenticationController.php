@@ -89,5 +89,33 @@ class AuthenticationController extends Controller
 
         return $response;
     }
+
+    public function index(Request $request)
+    {
+        $users = $this->authService->fetchAllUsers($request, []);
+
+        return $users;
+    }
+
+    public function show(int $id)
+    {
+        $user = $this->authService->fetchUser($id);
+
+        return $user;
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $user = $this->authService->updateUser($request, $id);
+
+        return $user;
+    }
+
+    public function destroy(int $id)
+    {
+        $user = $this->authService->deleteUser($id);
+
+        return $user;
+    }
 }
 

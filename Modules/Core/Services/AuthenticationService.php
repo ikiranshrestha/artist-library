@@ -75,6 +75,7 @@ class AuthenticationService
             $token = $user->createToken('app-token')->plainTextToken;
 
             return response()->json([
+                'message' => "Logged in successfully",
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ]);
@@ -88,5 +89,68 @@ class AuthenticationService
         $user->currentAccessToken()->delete();
 
         return response()->json(["message" => "Successfully logged out"], 200);
+    }
+
+    public function fetchAllUsers(Request $request)
+    {
+        $users = $this->authRepository->fetchAll($request, []);
+
+        return $users;
+    }
+
+    public function fetchUser(int $id)
+    {
+        $user = $this->authRepository->fetch($id);
+
+        return $user;
+    }
+
+    public function updateUser(Request $request, int $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            "first_name" => "required|string|max:255",
+            "last_name" => "required|string|max:255",
+            "email" => "required|string|email|unique:users,email," . $request->all()["id"],
+            "password" => "required|string|min:6",
+            "phone" => "required|string|between:10,10",
+            "dob" => "required|date",
+            "gender" => "required|in:m,f,o",
+            "address" => "nullable|string",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(["errors" => $validator->errors()], 422);
+        }
+
+        // Create a new user
+        $userArray = [];
+        $userArray['first_name'] = $request->first_name;
+        $userArray['last_name'] = $request->last_name;
+        $userArray['email'] = $request->email;
+        $userArray['password'] = bcrypt($request->password);
+        $userArray['phone'] = $request->phone;
+        $userArray['dob'] = $request->dob;
+        $userArray['gender'] = $request->gender;
+        $userArray['address'] = $request->address;
+
+        $store = $this->authRepository->update($userArray, $id);
+
+        if($store) {
+            return response()->json(['message' => 'User Updated successfully'], 201);
+        } else {
+            return response()->json(['message' => 'Something Went Wrong'], 500);
+        }
+    }
+
+    public function deleteUser(int $id)
+    {
+        $artist = $this->authRepository->delete($id);
+
+        if($artist) {
+            return response()->json(['message' => 'User erased successfully'], 201);
+        } else {
+            return response()->json(['message' => 'Something Went Wrong'], 500);
+        }
+        return $artist;
     }
 }

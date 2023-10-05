@@ -17,9 +17,14 @@ use Modules\Core\Http\Middleware\AuthenticateCustom;
 |
 */
 
-Route::middleware(['auth:sanctum', 'auth.custom'])->prefix("user")->group(function() {
-    Route::post("/logout", [AuthenticationController::class, "logout"])->name("logout");
-    Route::post("/create", [AuthenticationController::class, "register"])->name("core.create.user");
+Route::middleware(['auth:sanctum', 'auth.custom'])->group(function() {
+    // Route::get("/all", [AuthenticationController::class, "fetchAllUsers"])->name("core.users.all");
+    // Route::get("/{id}", [AuthenticationController::class, "fetchUser"])->name("core.users.id");
+    // Route::put("/{id}", [AuthenticationController::class, "updateUser"])->name("core.users.update");
+    // Route::delete("/{id}", [AuthenticationController::class, "deleteUser"])->name("core.users.delete");
+    Route::apiResource("user", AuthenticationController::class)->except("store");
+    Route::post("user/logout", [AuthenticationController::class, "logout"])->name("logout");
+    Route::post("user/create", [AuthenticationController::class, "register"])->name("core.create.user");
 
 });
 
