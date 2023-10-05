@@ -21,4 +21,9 @@ class CoreController extends Controller
     {
         return view('core.dashboard');
     }
+
+    public function userTab(Request $request)
+    {
+        return view('core.user.user-tab');
+    }
 }

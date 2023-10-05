@@ -15,13 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CoreController::class, 'loginPage']);
+
 
 Route::get('/register', [CoreController::class, 'registerPage']);
-// Route::get('/login', [CoreController::class, 'loginPage']);
-// Route::get('/dashboard', [CoreController::class, 'dashboard']);
+Route::get('/login', [CoreController::class, 'loginPage']);
+Route::get('/dashboard', [CoreController::class, 'dashboard']);
 
 // Route::get('/songs', [ArtistSongsController::class, 'songsPage']);
 // Route::get('/artists', [ArtistSongsController::class, 'artistsPage']);
+Route::get('/dashboard/users', [CoreController::class, 'userTab'])->name('core.user.user-tab');
+Route::get('/dashboard/artists', [ArtistSongsController::class, 'artistTab'])->name('artist-song.artist-tab');
